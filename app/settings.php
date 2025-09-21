@@ -1,27 +1,41 @@
 <?php
-
-declare(strict_types=1);
-
+ namespace scr\config\settings;
 use App\Application\Settings\Settings;
-use App\Application\Settings\SettingsInterface;
-use DI\ContainerBuilder;
-use Monolog\Logger;
+use Psr\Container\ContainerInterface;
+use App\core\Application\Actions\GetAllPraticiensAction;
+use App\core\Application\ports\api\PraticienServiceInterphase;
+use App\core\Application\ports\spi\PraticienRepository;
+use App\core\Application\usecase\PraticienService;
+use App\Infrastructure\Persistence\User\PgPraticienRepository;
 
-return function (ContainerBuilder $containerBuilder) {
+ Return [
+    // settings
+    'settings'=>[
+    'displayErrorDetails'=>true,
+    'logs.dir'=>__DIR__.'/../logs',
+    'db'=> __DIR__.'/../src/config/db.ini'
+ ],
 
-    // Global Settings Object
-    $containerBuilder->addDefinitions([
-        SettingsInterface::class => function () {
-            return new Settings([
-                'displayErrorDetails' => true, // Should be set to false in production
-                'logError'            => false,
-                'logErrorDetails'     => false,
-                'logger' => [
-                    'name' => 'slim-app',
-                    'path' => isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app.log',
-                    'level' => Logger::DEBUG,
-                ],
-            ]);
-        }
-    ]);
-};
+    // application 
+    GetAllPraticiensAction::class=> function(ContainerInterface $c){
+        return new GetAllPraticiensAction($c->get(PraticienServiceInterphase::class));
+    },
+    // services
+    PraticienServiceInterphase::class=> function (ContainerInterface $c){
+        return new PraticienService($c->get(PraticienRepository::class));
+
+    },
+    //  infractucture
+    'toubilib.pdo'=> function(ContainerInterface $c){
+        $settings=$c->get('settings');
+        $config=parse_ini_file($settings['db']);
+        $dsn="{$config['driver']}:host={$config['host']};dbname={$config['database']};charset={$config['charset']}";
+        $praticien=$config['username'];
+        $password=$config['password'];
+
+        return new \PDO($dsn,$praticien,$password,[\PDO::ATTR_ERRMODE=>\PDO::ERRMODE_EXCEPTION]);
+    },
+    PraticienRepository::class=> fn(ContainerInterface $c)
+                              => new PgPraticienRepository($c->get('toubilib.pdo'))
+
+];
