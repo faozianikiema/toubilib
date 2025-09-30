@@ -7,4 +7,5 @@ interface PraticienServiceInterphase{
      * @return Praticien[]
      */
     public function getAllPraticiens(): array;
+    public function getPraticien(string $id):Praticien;
 }

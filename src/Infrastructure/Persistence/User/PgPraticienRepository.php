@@ -69,7 +69,7 @@ class PgPraticienRepository implements PraticienRepository {
         return $praticiens;
     }
 
-    public function findPraticienOfId(string $id): Praticien {
+    public function findPraticienOfId ($id): Praticien {
         if (!Uuid::isValid($id)) {
             throw new InvalidArgumentException('Invalid uuid string: ' . $id);
         }

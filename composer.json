@@ -27,6 +27,7 @@
         "illuminate/database": "^12.28",
         "monolog/monolog": "^2.9",
         "php-di/php-di": "^6.4",
+        "ramsey/uuid": "^4.9",
         "slim/psr7": "^1.6",
         "slim/slim": "^4.12"
     },
