@@ -49,7 +49,7 @@ public function creerRendezVous(InputRendezVousDTO $dto): RendezVous {
     }
 }
 
- public function annulerRendezVous(int $idRdv):void{
+ public function annulerRendezVous(string $idRdv):void{
     $rdv=$this->repository->findById($idRdv);
     if(!$rdv){
         throw new Exception("le rendez vous avec l'id $idRdv n'existe pas ");

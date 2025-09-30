@@ -21,9 +21,10 @@ class PgRendezVousRepository implements RendezVousRepository
         try {
  $dateFin = $rendezVous->getDate_heure_fin() 
             ? $rendezVous->getDate_heure_fin()
-            : (clone $rendezVous->getDate_heure_debut())->modify('+' . $rendezVous->getDuree() . ' minutes');            $stmt = $this->pdo->prepare("
-                INSERT INTO rendez_vous (id, praticien_id, patient_id, date_heure_debut, date_heure_fin, date_creation, statut, motif_visite)
-                VALUES (:id, :praticien_id, :patient_id, :date_heure_debut, :date_heure_fin, :date_creation, :statut, :motif_visite)
+            : (clone $rendezVous->getDate_heure_debut())->modify('+' . $rendezVous->getDuree() . ' minutes');   
+                 $stmt = $this->pdo->prepare("
+                INSERT INTO rendez_vous (id, praticien_id, patient_id, date_heure_debut, date_heure_fin, date_creation, statut,duree, motif_visite)
+                VALUES (:id, :praticien_id, :patient_id, :date_heure_debut, :date_heure_fin, :date_creation, :statut,:duree, :motif_visite)
             ");
 
           $stmt->execute([
@@ -31,7 +32,7 @@ class PgRendezVousRepository implements RendezVousRepository
             ':praticien_id'   => $rendezVous->getPraticienID(),
             ':patient_id'     => $rendezVous->getPatientID(),
             ':date_heure_debut'=> $rendezVous->getDate_heure_debut()->format('Y-m-d H:i:s'),
-            ':date_heure_fin' => $rendezVous->$dateFin,
+            ':date_heure_fin' => $dateFin->format("Y-m-d H:i:s"),
             ':date_creation'  => $rendezVous->getDate_creation()->format('Y-m-d H:i:s'),
             ':statut'         => $rendezVous->getStatut(),
             ':duree'          => $rendezVous->getDuree(),

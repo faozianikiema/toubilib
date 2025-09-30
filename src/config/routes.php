@@ -3,6 +3,7 @@ declare(strict_types=1);
 use App\core\Application\Actions\AnnulerRendezVousAction;
 use App\core\Application\Actions\CreerRendezVousAction;
 use App\core\Application\Actions\GetPatientAction;
+use App\core\Application\Middleware\CreerRendezVousMiddleware;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use App\core\Application\Actions\GetAllPraticiensAction;
@@ -20,8 +21,9 @@ return function(App $app):App{
     $app->get('/rendezvous/{id}',GetRendezVousByIdAction::class)
         ->setName('rendezvous');
 
-    $app->post('/rendezvous',CreerRendezVousAction::class);
-    $app->delete('/rendezVous/{id}/annuler',AnnulerRendezVousAction::class);
+    $app->post('/rendezvous',CreerRendezVousAction::class)
+        ->add(CreerRendezVousMiddleware::class);
+    $app->delete('/rendezvous/{id}',AnnulerRendezVousAction::class);
     $app->get('/patients',GetPatientAction::class)
          ->setName('patient');
 

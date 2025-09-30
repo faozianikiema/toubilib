@@ -18,7 +18,7 @@ interface RendezVousServiceInterphase {
      * @param int|string $idRdv Identifiant du rendez-vous
      * @throws \Exception si le rendez-vous n’existe pas ou ne peut pas être annulé
      */
-    public function  annulerRendezVous(int $idRdv):void;
+    public function  annulerRendezVous(string $idRdv):void;
     
     
 }

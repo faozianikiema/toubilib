@@ -35,12 +35,12 @@ CREATE TABLE rendez_vous (
     motif_visite VARCHAR(255) NOT NULL
 );
 
-INSERT INTO rendez_vous (id, praticien_id, patient_id, date_heure_debut, date_heure_fin, statut, duree, motif_visite)
+INSERT INTO rendez_vous (id, praticien_id, patient_id, date_heure_debut, date_heure_fin,date_creation, statut, duree, motif_visite)
 VALUES
-(UUID(), '550e8400-e29b-41d4-a716-446655440000', '550e8400-e29b-41d4-a716-446655440001', '2025-09-28 09:00:00', '2025-09-28 09:30:00', 1, 30, 'Consultation générale'),
-(UUID(), '550e8400-e29b-41d4-a716-446655440000', '550e8400-e29b-41d4-a716-446655440002', '2025-09-28 10:00:00', '2025-09-28 10:45:00', 1, 45, 'Suivi médical'),
-(UUID(), '550e8400-e29b-41d4-a716-446655440000', '550e8400-e29b-41d4-a716-446655440003', '2025-09-29 14:00:00', '2025-09-29 14:30:00', 1, 30, 'Résultats analyse'),
-(UUID(), '650e8400-e29b-41d4-a716-446655440000', '550e8400-e29b-41d4-a716-446655440004', '2025-09-28 11:00:00', '2025-09-28 11:30:00', 1, 30, 'Cardiologie');
+(UUID(), '550e8400-e29b-41d4-a716-446655440000', '550e8400-e29b-41d4-a716-446655440001', '2025-09-28 09:00:00', '2025-09-28 09:30:00',now(), 1, 30, 'Consultation générale'),
+(UUID(), '550e8400-e29b-41d4-a716-446655440000', '550e8400-e29b-41d4-a716-446655440002', '2025-09-28 10:00:00', '2025-09-28 10:45:00',now(), 1, 45, 'Suivi médical'),
+(UUID(), '550e8400-e29b-41d4-a716-446655440000', '550e8400-e29b-41d4-a716-446655440003', '2025-09-29 14:00:00', '2025-09-29 14:30:00',now(), 1, 30, 'Résultats analyse'),
+(UUID(), '650e8400-e29b-41d4-a716-446655440000', '550e8400-e29b-41d4-a716-446655440004', '2025-09-28 11:00:00', '2025-09-28 11:30:00',now(), 1, 30, 'Cardiologie');
 
 
 DROP TABLE if EXISTS patient;
