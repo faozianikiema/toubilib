@@ -14,5 +14,8 @@ interface RendezVousRepository{
      */;
     public function findById(string $id):RendezVous;
     public function save(RendezVous $rendezVous):void;
+    public function majStatusRdv(string $rdvId, string $status): bool;
+    public function findByPraticien(string $praticienID):array;
+    public function findByPatient(string $patientID):array;
 
 }

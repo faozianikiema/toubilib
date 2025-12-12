@@ -4,6 +4,7 @@ namespace App\Core\Application\useCase;
 use App\Core\Application\Ports\Spi\PraticienRepository;
 use App\Core\Application\Ports\Api\PraticienServiceInterphase;
 use App\Core\Domain\Praticien\Praticien;
+use App\core\Domain\RendezVous\RendezVous;
 
 class PraticienService implements PraticienServiceInterphase {
     
@@ -11,6 +12,7 @@ class PraticienService implements PraticienServiceInterphase {
 
     public function __construct(PraticienRepository $praticienRepository) {
         $this->praticienRepository = $praticienRepository;
+    }
     
 
     /**
@@ -19,7 +21,7 @@ class PraticienService implements PraticienServiceInterphase {
      * @param string $id
      * @return Praticien|null
      */
-}
+    
 
     /**
      * @return Praticien[]
@@ -38,4 +40,14 @@ class PraticienService implements PraticienServiceInterphase {
         }
         return $praticien;
     }
+    public function GetPraticienBySpecialite(string $specialite): array
+    {
+        return $this->praticienRepository->findPraticienBySpecialite($specialite);
+    }
+
+    public function GetPraticienByVille(string $ville): array
+    {
+        return $this->praticienRepository->findPraticienByVille($ville);
+    }
+
 }

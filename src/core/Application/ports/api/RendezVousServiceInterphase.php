@@ -19,6 +19,9 @@ interface RendezVousServiceInterphase {
      * @throws \Exception si le rendez-vous n’existe pas ou ne peut pas être annulé
      */
     public function  annulerRendezVous(string $idRdv):void;
+    public function updateStatus(string $rdvId, string $status): bool;
+    public function GetPratienRendezVous(string $praticienID):array;
+    public function GetRendezVousPatient(string $patientID):array;
     
     
 }

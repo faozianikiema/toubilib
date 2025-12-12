@@ -8,15 +8,15 @@ class RendezVous{
     private string $id;
     private string $praticienID;
     private string $patientID;
-    private DateTime $date_heure_debut;
+    private ?DateTime $date_heure_debut;
     private ?DateTime $date_heure_fin;
     private DateTime $date_creation;
-    private int $statut;
+    private string $statut;
     private int $duree;
     private string $motif_visite;
     private string $etat;
 
-    public function __construct(string $id,string $praticienID,string $patientID,DateTime $date_heure_debut,?DateTime $date_heure_fin,int $statut,int $duree,string $motif_visite,string $etat='prevu'){
+    public function __construct(string $id,string $praticienID,string $patientID,?DateTime $date_heure_debut,?DateTime $date_heure_fin,string $statut,int $duree,string $motif_visite,string $etat='prevu'){
         $this->id=$id;
         $this->praticienID=$praticienID;
         $this->patientID=$patientID;
@@ -60,7 +60,7 @@ class RendezVous{
     }
     
 
-    function annuler(){
+    public function annuler(){
         /**
          * @throws Exception si l’annulation est impossible
          */

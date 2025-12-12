@@ -1,6 +1,7 @@
 <?php
 namespace App\core\Application\UseCase;
 use App\core\Application\ports\api\RendezVousServiceInterphase;
+use App\core\Application\ports\spi\PraticienRepository;
 use App\core\Application\ports\spi\RendezVousRepository;
 use App\core\Domain\RendezVous\RendezVous;
 use App\core\Application\DTO\InputRendezVousDTO;
@@ -10,6 +11,7 @@ use Ramsey\Uuid\Nonstandard\Uuid;
 
 class RendezVousService implements RendezVousServiceInterphase{
   private RendezVousRepository $repository;
+  private PraticienRepository $praticienRepository;
 
     public function __construct(RendezVousRepository $repository)
     {
@@ -57,6 +59,50 @@ public function creerRendezVous(InputRendezVousDTO $dto): RendezVous {
     $rdv->annuler();
     $this->repository->save($rdv);
  }
+  public function getAgendaPraticien(string $praticienID,DateTime $date_debut , DateTime    $date_fin = null): array
+    {
+        $rdvs = $this->repository->findByPraticienAndPeriod($praticienID, $date_debut, $date_fin);
+
+   $agenda = array_map(fn($rdv) => [
+    'id' => $rdv->getId(),
+    'date-debut' => $rdv->getDate_heure_debut()->format('H:i'),
+    'heure' => $rdv->getDate_heure_fin()->format('H:i'),
+    'duree' => $rdv->getDuree(),
+    'motif' => $rdv->getMotif_visite(),
+    'statut' => $rdv->getStatut() ? 0 : 1,
+    'patient' => [
+        'id' => $rdv->getPatientID(),
+        'lien' => '/patients/' . $rdv->getPatientID(),
+    ]
+], $rdvs);
+return $agenda;
+
+    }
+    public function updateStatus(string $rdvId, string $status): bool{
+        return $this->repository->majStatusRdv($rdvId, $status);
+    }
+    public function GetPratienRendezVous(string $praticienID): array{
+        return $this->repository->findByPraticien($praticienID);
+        }
+    public function GetRendezVousPatient(string $patientID): array{
+        return $this->repository->findByPatient($patientID);
+    }
+       
+    public function createRendezVous(RendezVous $rdv): void
+   {
+    $indispos = $this->praticienRepository->findIndisponibilites(
+       $rdv->getPraticienID(),
+        $rdv->getDate_heure_debut(),
+        $rdv->getDate_heure_fin()
+    );
+
+    if (!empty($indispos)) {
+        throw new \RuntimeException("Le praticien est indisponible à cette période.");
+    }
+
+    $this->repository->save($rdv);
+}
+
 }
 
 

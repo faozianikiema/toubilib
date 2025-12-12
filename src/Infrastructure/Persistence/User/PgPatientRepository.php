@@ -27,40 +27,71 @@ class PgPatientRepository implements PatientRepository
        
 
         return new Patient(
-            $row['uuid'],
+            $row['id'],
             $row['nom'],
             $row['prenom'],
             $row['date_naissance'],
             $row['adresse'],
             $row['ville'],
             $row['code_postal'],
-            $row['email'],
-            $row['telephone']
+            $row['telephone'],
+            $row['user.email'],
+
         );
     }
 
-    public function save(Patient $patient): void
-    {
-        $stmt = $this->pdo->prepare("
-            INSERT INTO patient (uuid, nom, prenom,date_naissance,adresse,ville,code_postal email, telephone)
-            VALUES (:uuid, :nom, :prenom,:date_naissance,:adresse,:ville,:code_postal, :email, :telephone)
-            ON CONFLICT (id) DO UPDATE
-            SET nom = :nom, prenom = :prenom,date_naissance=:date_naissance,adresse=:adresse,ville=:ville,code_postal=:code_postal, email = :email, telephone = :telephone
-        ");
+public function save(Patient $patient): void
+{
+    $user = $patient->getUser();
+    $userId = $user->getId();
+    $email = $user->getEmail();
+    $passwordHash = $user->getPassword(); 
+    $role = 1; 
 
-        $stmt->execute([
-            'uuid' => $patient->getId(),
+    $this->pdo->beginTransaction();
+    try {
+        $stmtUser = $this->pdo->prepare("
+            INSERT INTO user (id, email, password, role)
+            VALUES (:id, :email, :password, :role)
+        ");
+        $stmtUser->execute([
+            'id' => $userId,
+            'email' => $email,
+            'password' => $passwordHash,
+            'role' => $role,
+        ]);
+
+
+        $stmtPatient = $this->pdo->prepare("
+            INSERT INTO patient (id, user_id, nom, prenom, date_naissance, adresse, ville, code_postal, telephone)
+            VALUES (:id, :user_id, :nom, :prenom, :date_naissance, :adresse, :ville, :code_postal, :telephone)
+            ON DUPLICATE KEY UPDATE
+                nom = :nom,
+                prenom = :prenom,
+                date_naissance = :date_naissance,
+                adresse = :adresse,
+                ville = :ville,
+                code_postal = :code_postal,
+                telephone = :telephone
+        ");
+        $stmtPatient->execute([
+            'id' => $patient->getId(),
+            'user_id' => $userId,
             'nom' => $patient->getNom(),
             'prenom' => $patient->getPrenom(),
-            'date_naissance'=>$patient->getDateNaissance()->format('Y-m-d'),
-            'adresse'=>$patient->getAdresse(),
-            'ville'=>$patient->getVille(),
-            'code_postal'=>$patient->getCode_postal(),
-            'email' => $patient->getEmail(),
-            'telephone' => $patient->getTelephone()
+            'date_naissance' => $patient->getDateNaissance()->format('Y-m-d'),
+            'adresse' => $patient->getAdresse(),
+            'ville' => $patient->getVille(),
+            'code_postal' => $patient->getCode_postal(),
+            'telephone' => $patient->getTelephone(),
         ]);
-    }
 
+        $this->pdo->commit();
+    } catch (\Exception $e) {
+        $this->pdo->rollBack();
+        throw $e;
+    }
+}
     public function findAll(): array
     {
         $stmt = $this->pdo->query("SELECT * FROM patient");
@@ -69,15 +100,15 @@ class PgPatientRepository implements PatientRepository
         $patients = [];
         foreach ($rows as $row) {
             $patients[] = new Patient(
-                $row['uuid'],
+                $row['id'],
                 $row['nom'],
                 $row['prenom'],
                 new DateTime($row['date_naissance']),
                 $row['adresse'],
                 $row['ville'],
                 $row['code_postal'],
-                $row['email'],
-                $row['telephone']
+                $row['telephone'],
+                $row['user.email'],
             );
         }
 

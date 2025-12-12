@@ -2,7 +2,6 @@
 namespace App\core\Application\DTO;
 
 use DateTime;
-use function DI\string;
 
 class InputRendezVousDTO{
     public string $praticienID;

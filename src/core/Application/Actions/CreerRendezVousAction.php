@@ -36,7 +36,6 @@ class CreerRendezVousAction {
                 ->withHeader('Content-Type', 'application/json');
 
         } catch (\InvalidArgumentException $e) {
-            // Cas d’erreur de validation métier
             $response->getBody()->write(json_encode([
                 'error' => $e->getMessage()
             ]));

@@ -2,56 +2,51 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\User;
+namespace App\core\Domain\User;
 
-use JsonSerializable;
 
-class User implements JsonSerializable
+class User 
 {
-    private ?int $id;
+    protected string $id;
 
-    private string $username;
+    protected string $email;
 
-    private string $firstName;
+    protected int $role;
+    protected string $password;
 
-    private string $lastName;
+   
 
-    public function __construct(?int $id, string $username, string $firstName, string $lastName)
+    public function __construct(string $id, string $email, int $role, string $password)
     {
         $this->id = $id;
-        $this->username = strtolower($username);
-        $this->firstName = ucfirst($firstName);
-        $this->lastName = ucfirst($lastName);
+        $this->email = strtolower($email);
+        $this->role = $role;
+        $this->password = $password;
     }
 
-    public function getId(): ?int
+    public function getId()
     {
         return $this->id;
     }
 
-    public function getUsername(): string
+    public function getEmail(): string
     {
-        return $this->username;
+        return $this->email;
     }
 
-    public function getFirstName(): string
+    public function getRole():int
     {
-        return $this->firstName;
+        return $this->role;
     }
 
-    public function getLastName(): string
+    public function getPassword(): string
     {
-        return $this->lastName;
+        return $this->password;
+    }
+          public function verifyPassword(string $password): bool
+    {
+        return password_verify($password, $this->password);
     }
 
-    #[\ReturnTypeWillChange]
-    public function jsonSerialize(): array
-    {
-        return [
-            'id' => $this->id,
-            'username' => $this->username,
-            'firstName' => $this->firstName,
-            'lastName' => $this->lastName,
-        ];
-    }
+
 }

@@ -10,4 +10,5 @@ interface PatientServiceInterface
      */
     public function findById(string $id):Patient;
     public function getAllPatient(): array;
+    public function registerPatient($patient): Patient;
 }
