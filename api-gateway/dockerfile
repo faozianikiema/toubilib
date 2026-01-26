@@ -1,0 +1,11 @@
+FROM php:8.3-alpine
+
+RUN apk add --no-cache bash curl unzip icu-dev libzip-dev zlib-dev oniguruma-dev autoconf g++ make
+
+RUN docker-php-ext-install mysqli pdo_mysql intl zip
+
+COPY --from=composer:2.8 /usr/bin/composer /usr/bin/composer
+
+
+
+CMD ["php", "-S", "0.0.0.0:8080", "-t", "."]

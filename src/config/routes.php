@@ -20,6 +20,10 @@ use App\core\Application\Actions\GetRendezVousByIdAction;
 use Slim\App;
 
 return function(App $app):App{
+    $app->get('/', function($request,$response){
+        $response->getBody()->write("hello world!");
+        return  $response;
+    });
     $app->get('/praticiens', GetAllPraticiensAction::class)
         ->setName('praticiens-list');
     $app->get('/praticiens/{id}', GetIdPraticienAction::class)
@@ -27,10 +31,9 @@ return function(App $app):App{
     $app->get('/praticiens/specialite/{specialite}',GetPraticienSpecialiteAction::class);
     $app->get('/praticiens/ville/{ville}', GetPraticienVilleAction::class);
 
-    $app->get('/praticiens/{id}/rendezvous', GetPraticienRendezVousAction::class)->add(AuthnMiddleware::class);
-    $app->get('/rendezvous/{id}',GetRendezVousByIdAction::class)
+    $app->get('/praticiens/{id}/rendezvous', GetPraticienRendezVousAction::class)
         ->setName('rendezvous');
-    $app->patch('/rendezvous/{id}/status', UpdateStatusAction::class)->add(AuthnMiddleware::class);
+    $app->patch('/rendezvous/{id}/status', UpdateStatusAction::class);
 
     $app->post('/rendezvous',CreerRendezVousAction::class)
         ->add(CreerRendezVousMiddleware::class);

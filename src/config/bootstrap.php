@@ -1,7 +1,6 @@
 <?php
 use DI\ContainerBuilder;
 use Slim\Factory\AppFactory;
-use App\core\Application\Middleware\Cors;
 require __DIR__ . '/../../vendor/autoload.php';
 
 $containerBuilder=new ContainerBuilder();
@@ -12,7 +11,6 @@ $app=AppFactory::createFromContainer($c);
 
 $app->addBodyParsingMiddleware();
 $app->addRoutingMiddleware();
-$app->add(Cors::class);
 
 $settings =$c->get('settings');
 $errorMiddleware = $app->addErrorMiddleware(

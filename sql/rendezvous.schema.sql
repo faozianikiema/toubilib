@@ -10,8 +10,8 @@ CREATE TABLE rendezvous (
     date_heure_debut DATETIME NOT NULL,
     date_heure_fin DATETIME NOT NULL,
     date_creation DATETIME DEFAULT CURRENT_TIMESTAMP,
-    statut INT NOT NULL,                      
-    duree INT NOT NULL,                        
+    statut VARCHAR(32) NOT NULL,                      
+    duree INTEGER,                        
     motif_visite VARCHAR(128) NOT NULL,
     
     -- Clés étrangères

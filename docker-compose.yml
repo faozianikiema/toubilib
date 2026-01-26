@@ -42,3 +42,15 @@ services:
             - "8081:8080"
         depends_on:
             - db
+    api-gateway:
+        container_name: api-gateway
+        build: 
+           context: ./api-gateway
+           dockerfile: dockerfile
+        ports:
+            - "7080:8080"
+        working_dir: /var/www/html
+        volumes:
+            - ./api-gateway:/var/www/html
+        depends_on:
+         - slim

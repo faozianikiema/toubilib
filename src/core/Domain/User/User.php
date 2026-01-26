@@ -16,7 +16,7 @@ class User
 
    
 
-    public function __construct(string $id, string $email, int $role, string $password)
+    public function __construct(string $id, ?string $email, ?int $role, ?string $password)
     {
         $this->id = $id;
         $this->email = strtolower($email);

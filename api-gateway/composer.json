@@ -1,0 +1,19 @@
+{
+    "name": "root/html",
+    "autoload": {
+        "psr-4": {
+            "gateway\\": "application/"
+        }
+    },
+    "authors": [
+        {
+            "name": "faozia"
+        }
+    ],
+    "require": {
+                "guzzlehttp/guzzle": "^7.0",
+        "slim/slim": "^4.15",
+        "slim/psr7": "^1.8"
+
+    }
+}

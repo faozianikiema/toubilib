@@ -22,12 +22,13 @@ class Praticien
     private ?Structure $structure;
     private ?MotifVisite $motifVisite;
     private ?MoyenPaiement $moyenPaiement;
-    private User $user;
+    private ?User $user;
 
 
     
-    public function __construct(string $id,User $user, string $nom, string $prenom, string $ville,  string $telephone, ?string $rpps_id, string $titre, bool $accepte_nouveau_patient, bool $est_organisation,?Specialite $specialite,?MotifVisite $motifVisite,?Structure $structure,?MoyenPaiement $moyenPaiement){
+    public function __construct(string $id,User $user, string $nom, string $prenom, string $ville,  string $telephone, ?string $rpps_id, string $titre, bool $accepte_nouveau_patient, bool $est_organisation){
         $this->id = $id;
+        $this->user = $user;
         $this->nom = $nom;
         $this->prenom = $prenom;
         $this->ville = $ville;
@@ -36,11 +37,6 @@ class Praticien
         $this->titre = $titre;
         $this->accepte_nouveau_patient = $accepte_nouveau_patient;
         $this->est_organisation = $est_organisation;
-        $this->specialite=$specialite;
-        $this->motifVisite=$motifVisite;
-        $this->structure=$structure;
-        $this->moyenPaiement=$moyenPaiement;
-        $this->user=$user;
 
     }
     public function getId(){
@@ -83,4 +79,8 @@ class Praticien
         return $this->moyenPaiement;
     }
     public function getUser():User{return $this->user;}
+    public function getEmail(): ?string
+{
+    return $this->user ? $this->user->getEmail() : null;
+}
 }

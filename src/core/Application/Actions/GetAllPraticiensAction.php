@@ -23,7 +23,7 @@ class GetAllPraticiensAction extends AbstractAction
                 'nom'=>$praticien->getNom(),
                 'prenom'=>$praticien->getPrenom(),
                 'ville'=>$praticien->getVille(),
-                'email'=>$praticien->getEmail(),
+                'email'=>$praticien->getUser()->getEmail(),
                 'telephone'=>$praticien->getTelephone(),
                 'rpps_id'=>$praticien->getRppsid(),
                 'titre'=>$praticien->getTitre(),

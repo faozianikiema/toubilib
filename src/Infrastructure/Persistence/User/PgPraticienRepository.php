@@ -1,11 +1,14 @@
 <?php
 namespace App\Infrastructure\Persistence\User;
 
+use App\core\Domain\User\User;
 use Doctrine\Instantiator\Exception\InvalidArgumentException;
 use App\core\Application\ports\spi\PraticienRepository;
 use App\core\Domain\Praticien\Praticien;
 use PhpParser\Node\Expr\Cast\Bool_;
 use Ramsey\Uuid\Uuid;
+use App\core\Application\ports\spi\UserRepository;
+
 
 class PgPraticienRepository implements PraticienRepository {
     private \PDO $pdo;
@@ -71,17 +74,32 @@ public function save(Praticien $praticien): void {
 }
 
     public function findAll(): array {
-        $query = $this->pdo->prepare('SELECT * FROM praticien');
-        $query->execute();
+$query = $this->pdo->prepare("
+    SELECT
+        p.*,
+        u.id   AS user_id,
+        u.email,
+        u.role,
+        u.password
+    FROM praticien p
+    JOIN user u ON u.id = p.user_id
+");        
+$query->execute();
 
         $praticiens = [];
         while ($row = $query->fetch(\PDO::FETCH_ASSOC)) {
+             $user = new User(
+        $row['user_id'],
+        $row['email'],
+        $row['role'],
+        $row['password']
+    );
                     $accepteNouveauPatient = isset($row['accepte_nouveau_patient']) ? (bool)$row['accepte_nouveau_patient'] : false;
             $estOrganisation = isset($row['est_organisation']) ? (bool)$row['est_organisation'] : false;
 
             $praticiens[] = new Praticien(
                 $row['id'],
-                $row['user_id'],
+                $user,
                 $row['nom'],
                 $row['prenom'],
                 $row['ville'],
@@ -90,10 +108,10 @@ public function save(Praticien $praticien): void {
                 $row['titre'],
                 $accepteNouveauPatient,
             $estOrganisation,
-                $row['specialite']??null,      
-                $row['motifVisite']??null,
-                $row['structure']??null,
-                $row['moyenPainement']??null,
+                // $row['specialite']??null,      
+                // $row['motifVisite']??null,
+                // $row['structure']??null,
+                // $row['moyenPainement']??null,
 
             );
         }
@@ -112,22 +130,21 @@ public function save(Praticien $praticien): void {
         if (!$row) {
             throw new \ErrorException('Praticien not found with id: ' . $id);
         }
+        $userRepo = new PgUserRepository($this->pdo);
+        $user = $userRepo->findById($row['user_id']);
+
 
         return new Praticien(
             $row['id'],
-            $row['user_id'],
+            $user,
             $row['nom'],
             $row['prenom'],
             $row['ville'],
             $row['telephone'],
             $row['rpps_id'],
             $row['titre'],
-            (bool)$row['accepte_nouveau_patient'],
-            (bool)$row['est_organisation'],
-            $row['specialite_id']??null,
-             $row['motif_visite_id']??null,
-             $row['structure_id']??null,
-                $row['moyen_painement_id']??null,
+            (bool)($row['accepte_nouveau_patient']??false),
+            (bool)($row['est_organisation']??false),
         );
     }
     public function findPraticienBySpecialite(string $specialite): array
