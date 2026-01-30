@@ -1,5 +1,5 @@
 <?php
-namespace gateway\Middlewares;
+namespace gateway\application\Middlewares;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

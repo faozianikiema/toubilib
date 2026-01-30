@@ -1,6 +1,7 @@
 <?php
+declare(strict_types=1);
 use GuzzleHttp\Client;
-use gateway\Middlewares\CorsMiddleware;
+use gateway\application\Middlewares\CorsMiddleware;
 
 
 $app->addBodyParsingMiddleware();
@@ -10,8 +11,18 @@ $app->add(new CorsMiddleware());
 
 
 return [
-    'slim' => new Client([
-        'base_uri' => 'http://slim:8080'
-        
-    ])
+    'app-auth' => new Client([
+        'base_uri'=>'http://app-auth:8080']),
+
+    'app-praticien' => new Client([
+        'base_uri' => 'http://app-praticien:8080'
+    ]),
+
+    'rdv' => new Client([
+        'base_uri' => 'http://rdv:8080'
+    ]),
+    // 'toubilib' => new Client([
+    //     'base_uri' => 'http://toubilib:8080'
+    // ]),
+
 ];

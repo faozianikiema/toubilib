@@ -1,6 +1,6 @@
 <?php
 
-namespace gateway\actions;
+namespace gateway\application\actions;
 
 use GuzzleHttp\Client;
 use Psr\Http\Message\ResponseInterface;

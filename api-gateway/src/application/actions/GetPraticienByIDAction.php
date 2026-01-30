@@ -1,8 +1,7 @@
 <?php
-namespace gateway\actions;
+namespace gateway\application\actions;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
